@@ -1,11 +1,12 @@
-var OTurn = true;
+let OTurn = true;
+let GameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+let GameStateHistory = [];
 
-var GameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-var GameStateHistory = [];
+let OReplacements = 2;
+let XReplacements = 2;
+let ReplacementHistory = [];
+let is_game_over = false;
 
-var OReplacements = 2;
-var XReplacements = 2;
-var ReplacementHistory = [];
 
 update_UI();
 
@@ -14,6 +15,7 @@ function start_new() {
     GameStateHistory = [];
     ReplacementHistory = [];
     GameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    is_game_over = false
 
     OReplacements = 2;
     XReplacements = 2;
@@ -24,6 +26,7 @@ function start_new() {
 }
 
 function play_turn(cell) {
+    if(is_game_over) return;
 
     // --------------
 
@@ -53,16 +56,25 @@ function play_turn(cell) {
 
     GameState[cell - 1] = OTurn ? 1 : -1;
 
+    // check if someone has won 
+    fetch('/get_gamestate?gamestate=' + encodeURIComponent(GameState))
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+
+        if(data.state != 69) game_over(data.state);
+    });
+
     OTurn = !OTurn;
 
     update_UI();
 }
 
 function undo() {
-    if (GameStateHistory.length == 0) return;
+    if (GameStateHistory.length == 0 || is_game_over) return;
 
     GameState = GameStateHistory.pop();
-    replacements = ReplacementHistory.pop();
+    let replacements = ReplacementHistory.pop();
     OReplacements = replacements[0];
     XReplacements = replacements[1];
     
@@ -80,7 +92,7 @@ function update_UI() {
 
     document.getElementById("undo").disabled = (GameStateHistory.length == 0);
 
-    eval = parseInt(document.getElementById("eval_slider").value);
+    let eval = parseInt(document.getElementById("eval_slider").value);
     document.getElementById("eval_label").textContent = ((eval > 0)? "+" : "") + eval/100;
     eval += 100;
     eval *= 1.28;
@@ -90,8 +102,27 @@ function update_UI() {
     for (let i = 0; i < 9; i++) {
         let state = GameState[i];
         cell = document.getElementById("cell_" + (i + 1));
-        cell.textContent = (state == 1) ? "O" : ((state == -1) ? "X" : "");
+        cell.textContent = (state === 1) ? "O" : ((state === -1) ? "X" : "");
         cell.style = (state == 1) ? "color: dodgerblue" : "color: tomato";
     }
+}
+
+function game_over(winner){
+
+    is_game_over = true;
+    console.log(winner)
+
+    switch(winner){
+        case 1:
+            alert("O win!")
+            break
+        case -1:
+            alert("X win!")
+            break
+        case 0:
+            alert("draw!")
+            break
+    }
+
 }
 
