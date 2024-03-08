@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tricky Tac Toe</title>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
-<body>
+
+<body onload="update_UI()">
 
     <!-- Title -->
     <h1 style="width: 512px; text-align: center;">Tricky Tac Toe</h1>
@@ -18,52 +20,69 @@
         <!-- Eval Area -->
         <div>
             <!-- Eval Bar -->
-            <div id="eval_bar" class="Eval"> 
-                
-                <div id="eval_red" class="Eval_red"></div> 
+            <div id="eval_bar" class="Eval">
+
+                <div id="eval_red" class="Eval_red"></div>
                 <div class="Eval_separater"></div>
                 <div id="eval_blue" class="Eval_blue"></div>
 
             </div>
 
-            <p id = "eval_label" class="Eval_label">+0.5</p>
+            <p id="eval_label" class="Eval_label">+0.5</p>
 
         </div>
 
-        <div style="width:32px"> </div>
+        <div style="width: 32px"> </div>
 
         <!-- Tic Tac Toe Area -->
-        <div style="display: flex; flex-direction: column-reverse"> 
+        <div style="display: flex; flex-direction: column-reverse">
 
             <!-- Turn Indicators -->
-            <div style="flex:1;"> 
-                <p style="width: 100%; display: flex;"> 
-                    <span id="turn_indicator_O" class="Turn_indicator_O"> O </span> 
-                    <span id="turn_indicator_X" class="Turn_indicator_disabled"> X </span> 
-                </p> 
+            <div style="flex:1;">
+                <p style="width: 100%; display: flex;">
+                    <span id="turn_indicator_O" class="Turn_indicator_O"> O </span>
+                    <span id="turn_indicator_X" class="Turn_indicator_disabled"> X </span>
+                </p>
             </div>
 
             <!-- Tic Tac Toe Table -->
             <table style="height: fit-content;">
-                <tr> <td id="cell_1" onclick="play_turn(1)" style="color:dodgerblue"></td> <td id="cell_2" onclick="play_turn(2)"></td> <td id="cell_3" onclick="play_turn(3)"></td> </tr>
-                <tr> <td id="cell_4" onclick="play_turn(4)"></td> <td id="cell_5" onclick="play_turn(5)" style="color:tomato"></td> <td id="cell_6" onclick="play_turn(6)"></td> </tr>
-                <tr> <td id="cell_7" onclick="play_turn(7)"></td> <td id="cell_8" onclick="play_turn(8)"></td> <td id="cell_9" onclick="play_turn(9)"></td> </tr>
+                <tr>
+                    <td id="cell_1" onclick="play_turn(1)"></td>
+                    <td id="cell_2" onclick="play_turn(2)"></td>
+                    <td id="cell_3" onclick="play_turn(3)"></td>
+                </tr>
+                <tr>
+                    <td id="cell_4" onclick="play_turn(4)"></td>
+                    <td id="cell_5" onclick="play_turn(5)"></td>
+                    <td id="cell_6" onclick="play_turn(6)"></td>
+                </tr>
+                <tr>
+                    <td id="cell_7" onclick="play_turn(7)"></td>
+                    <td id="cell_8" onclick="play_turn(8)"></td>
+                    <td id="cell_9" onclick="play_turn(9)"></td>
+                </tr>
             </table>
 
             <div style="flex:1"></div>
         </div>
 
-        <div style="height:128px; margin:25px">
-            <p style="font-size: 20px; font-weight: 700; text-align: center;"> Replacements left </p> 
-            <p style="font-size: 20px; font-weight: 600; text-align: center;"> <span style="color:dodgerblue;">O</span> : <span id="o_replacements">2</span></p>
-            <p style="font-size: 20px; font-weight: 600; text-align: center;"> <span style="color:tomato">X</span> : <span id="x_replacements">2</span></p>
+        <div class="Replacements_Box">
+            <p style="font-size: 20px; font-weight: 700; text-align: center;"> Replacements </p>
+            <p style="font-size: 20px; font-weight: 600; text-align: center;"> <span style="color:dodgerblue;">O</span>
+                :
+                <span id="o_replacements">()</span>
+            </p>
+            <p style="font-size: 20px; font-weight: 600; text-align: center;"> <span style="color:tomato">X</span> :
+                <span id="x_replacements">()</span>
+            </p>
         </div>
 
     </div>
 
 
     <!-- Buttons + Other labels-->
-    <div style="width: 512px;">
+    <div style="width: 544px">
         <hr>
         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
             <button id="undo" onclick="undo()">↺ Undo</button>
@@ -72,8 +91,8 @@
 
             <div>
                 <p>Eval:</p>
-                <input onchange="update_UI()" id = "eval_slider" type="range" min="-100" max="100" value="0">
-              </div>
+                <input onchange="update_UI()" id="eval_slider" type="range" min="-100" max="100" value="0">
+            </div>
         </div>
 
     </div>
@@ -81,108 +100,128 @@
 </body>
 
 <style>
+    body {
+        background-color: rgb(41, 41, 41);
+        color: whitesmoke;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-body {
-    background-color: rgb(41, 41, 41);
-    color:whitesmoke;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    td {
+        border: 2px whitesmoke solid;
+        width: 64px;
+        height: 64px;
+        background-color: rgb(22, 22, 22);
+        font-size: 48px;
+        font-weight: 800;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
 
-td {
-    border: 2px whitesmoke solid;
-    width: 64px;
-    height: 64px;
-    background-color: rgb(22, 22, 22);
-    font-size: 48px;
-    font-weight: 800;
-    text-align: center;
-    transition: all 0.2s ease;
-}
-td:hover {
-    background-color: rgb(74, 74, 74);
-}
-td:active {
-    background-color: black;
-}
+    td:hover {
+        background-color: rgb(74, 74, 74);
+    }
 
-.Eval {
-    width: 32px;
-    height: 256px;
-    border: 3px rgb(22, 22, 22) solid;
-    margin: 10px;   
-    display:flex;
-    flex-direction: column;
-}
-.Eval_separater {
-    height: 3px; 
-    background-color: rgb(22, 22, 22);
-}
-.Eval_red {
-    background-color: tomato;
-    height: 96px;
-    transition: all 0.5s ease;
-}
-.Eval_blue {
-    background-color: dodgerblue;
-    flex:1;
-    transform: all 0.5s ease;
-}
-.Eval_label {
-    margin: 10px; 
-    font-weight: 500;
-}
+    td:active {
+        background-color: black;
+    }
 
-.Turn_indicator_O {
-    font-size: 32px;
-    color:dodgerblue;
-    text-align: center;
-    width: 50%;
-    font-weight: 700;
-    transition: all 0.2s ease;
-}
-.Turn_indicator_X {
-    font-size: 32px;
-    color:tomato;
-    text-align: center;
-    width: 50%;
-    font-weight: 700;
-    transition: all 0.2s ease;
-}
-.Turn_indicator_disabled {
-    font-size: 32px;
-    color:rgb(74, 74, 74);
-    text-align: center;
-    width: 50%;
-    font-weight: 700;
-    transition: all 0.2s ease;
-}
+    .Eval {
+        width: 32px;
+        height: 256px;
+        border: 3px rgb(22, 22, 22) solid;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+    }
 
-button {
-    padding-left: 10px;
-    padding-right: 10px;
-    margin: 5px;
-    width:auto;
-    height: 32px;
-    font-size:16px;
-    background-color: rgb(22, 22, 22);
-    transition: all 0.2s ease;
-    border: 2px whitesmoke solid;
-    border-radius: 10px;
-    color: whitesmoke;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-button:hover {
-    background-color: rgb(74, 74, 74);
-}
-button:active {
-    background-color: black;
-}
-button:disabled{
-    background-color: rgb(119, 119, 119);
-    border-radius: 0;
-    color: rgb(24, 24, 24);
-}
+    .Eval_separater {
+        height: 3px;
+        background-color: rgb(22, 22, 22);
+    }
 
+    .Eval_red {
+        background-color: tomato;
+        height: 96px;
+        transition: all 0.5s ease;
+    }
+
+    .Eval_blue {
+        background-color: dodgerblue;
+        flex: 1;
+        transform: all 0.5s ease;
+    }
+
+    .Eval_label {
+        margin: 10px;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .Turn_indicator_O {
+        font-size: 32px;
+        color: dodgerblue;
+        text-align: center;
+        width: 50%;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .Turn_indicator_X {
+        font-size: 32px;
+        color: tomato;
+        text-align: center;
+        width: 50%;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .Turn_indicator_disabled {
+        font-size: 32px;
+        color: rgb(74, 74, 74);
+        text-align: center;
+        width: 50%;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .Replacements_Box {
+        height: fit-content;
+        margin: 25px;
+        border: 2px whitesmoke solid;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: rgb(22, 22, 22);
+    }
+
+    button {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 5px;
+        width: auto;
+        height: 32px;
+        font-size: 16px;
+        background-color: rgb(22, 22, 22);
+        transition: all 0.2s ease;
+        border: 2px whitesmoke solid;
+        border-radius: 10px;
+        color: whitesmoke;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    button:hover {
+        background-color: rgb(74, 74, 74);
+    }
+
+    button:active {
+        background-color: black;
+    }
+
+    button:disabled {
+        background-color: rgb(119, 119, 119);
+        border-radius: 0;
+        color: rgb(24, 24, 24);
+    }
 </style>
 
 </html>
